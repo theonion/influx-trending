@@ -25,7 +25,7 @@ def get_thresholds(client: InfluxDBClient, percentile_series: str, time_offset: 
         results = results[0]
     else:
         logging.error('`get_thresholds` query results are empty')
-        raise Exception('results are empty')
+        raise Exception('results are empty: {} = {}'.format(query, results))
 
     points = results.get('points', [])
     return [(timestamp, threshold) for timestamp, _, threshold in points]
@@ -47,7 +47,7 @@ def get_content(client: InfluxDBClient, content_series: str, time_offset: int, t
         results = results[0]
     else:
         logging.error('`get_content` query results are empty')
-        raise Exception('results are empty')
+        raise Exception('results are empty: {} = {}'.format(query, results))
 
     points = results.get('points', [])
     return points
