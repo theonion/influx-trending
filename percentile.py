@@ -63,8 +63,8 @@ def write_trend_point(client: InfluxDBClient, trending_series: str, content: [[i
     """
     body = [{
         'name': trending_series,
-        'columns': ['time', 'clicks', 'content_id', 'threshold'],
-        'points': [[t[0], t[2], t[3], threshold] for t in content],
+        'columns': ['time', 'sequence_number', 'clicks', 'content_id', 'threshold'],
+        'points': [[t[0], 1, t[2], t[3], threshold] for t in content],
     }]
     try:
         client.write_points(body)
