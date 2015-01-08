@@ -4,8 +4,10 @@
 doing stuff i really wish we could have done natively in influxdb -- what a disappointment
 """
 
+from datetime import datetime
 import logging
 import sys
+import time
 
 from influxdb import InfluxDBClient
 
@@ -24,8 +26,9 @@ def get_thresholds(client, percentile_series, time_offset):
     if len(results):
         results = results[0]
     else:
-        logging.error('`get_thresholds` query results are empty')
-        raise Exception('results are empty: {} = {}'.format(query, results))
+        n = datetime.now()
+        now = time.mktime(datetime(n.year, n.month, n.day, n.hour, 0, 0, 0).timetuple())
+        results = {'points': [now, None, 1]}
 
     points = results.get('points', [])
     return [(timestamp, threshold) for timestamp, _, threshold in points]
@@ -46,8 +49,7 @@ def get_content(client, content_series, time_offset, threshold):
     if len(results):
         results = results[0]
     else:
-        logging.error('`get_content` query results are empty')
-        raise Exception('results are empty: {} = {}'.format(query, results))
+        results = {}
 
     points = results.get('points', [])
     return points
