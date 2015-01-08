@@ -10,7 +10,7 @@ import sys
 from influxdb import InfluxDBClient
 
 
-def get_thresholds(client: InfluxDBClient, percentile_series: str, time_offset: int) -> [(str, str)]:
+def get_thresholds(client, percentile_series, time_offset):
     """gets timestamp and threshold tuples from a given series within a given offset
 
     :param client: an influxdb client
@@ -31,7 +31,7 @@ def get_thresholds(client: InfluxDBClient, percentile_series: str, time_offset: 
     return [(timestamp, threshold) for timestamp, _, threshold in points]
 
 
-def get_content(client: InfluxDBClient, content_series: str, time_offset: int, threshold: int) -> [[int, int, int, str]]:
+def get_content(client, content_series, time_offset, threshold):
     """gets content points that match a given time offset and have click values within the threshold
 
     :param client: an influxdb client
@@ -53,7 +53,7 @@ def get_content(client: InfluxDBClient, content_series: str, time_offset: int, t
     return points
 
 
-def write_trend_point(client: InfluxDBClient, trending_series: str, content: [[int, int, int, str]], threshold: int):
+def write_trend_point(client, trending_series, content, threshold):
     """writes trend values to a given series so that it can be later recalled or rendered
 
     :param client: and influxdb client
