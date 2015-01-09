@@ -39,8 +39,8 @@ def main(client, content_series, trending_series, offset):
         'points': points,
     }]
     print(body)
-    # client.write_points(body)
-#
+    client.write_points(body)
+
 
 if __name__ == '__main__':
     import sys
