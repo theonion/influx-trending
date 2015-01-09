@@ -30,7 +30,7 @@ def get_thresholds(client, percentile_series, time_offset):
         results = {'points': [[now, None, 1], ]}
 
     points = results.get('points', [])
-    return [(timestamp, threshold) for timestamp, _, threshold in points[:1]]
+    return [(timestamp, threshold) for timestamp, _, threshold in points[:2]]
 
 
 def get_content(client, content_series, time_offset, threshold):
