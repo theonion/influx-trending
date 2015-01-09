@@ -6,7 +6,6 @@ doing stuff i really wish we could have done natively in influxdb -- what a disa
 
 from datetime import datetime
 import logging
-import sys
 import time
 
 from influxdb import InfluxDBClient
@@ -55,16 +54,16 @@ def get_content(client, content_series, time_offset, threshold):
     return points
 
 
-def write_trend_point(client, trending_series, content, threshold):
+def write_popular_point(client, popular_series, content, threshold):
     """writes trend values to a given series so that it can be later recalled or rendered
 
     :param client: and influxdb client
-    :param trending_series: the name of the series to write to
+    :param popular_series: the name of the series to write to
     :param content: the content/point lists from `get_content`
     :param threshold: the minimum number of clicks allowable
     """
     body = [{
-        'name': trending_series,
+        'name': popular_series,
         'columns': ['time', 'sequence_number', 'clicks', 'content_id', 'threshold'],
         'points': [[t[0], 1, t[2], t[3], threshold] for t in content],
     }]
@@ -75,8 +74,9 @@ def write_trend_point(client, trending_series, content, threshold):
 
 
 if __name__ == '__main__':
+    import sys
     # get values
-    _, host, port, username, password, db, percentile_series, content_series, trending_series, offset = sys.argv
+    _, host, port, username, password, db, percentile_series, content_series, popular_series, offset = sys.argv
 
     # create client
     client = InfluxDBClient(host, port, username, password, db)
@@ -93,4 +93,4 @@ if __name__ == '__main__':
         logging.info('found {} points that match'.format(len(content)))
 
         # write to series
-        write_trend_point(client, trending_series, content, threshold)
+        write_popular_point(client, popular_series, content, threshold)
