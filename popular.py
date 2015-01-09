@@ -19,7 +19,7 @@ def get_thresholds(client, percentile_series, time_offset):
     :param time_offset: the influxdb formatted time offset
     :return: a list of timestamp, threshold tuples
     """
-    query = 'select * from {} where time > now() - {}'.format(percentile_series, time_offset)
+    query = 'select * from {}'.format(percentile_series)
     results = client.query(query)
 
     if len(results):
@@ -27,10 +27,10 @@ def get_thresholds(client, percentile_series, time_offset):
     else:
         n = datetime.now()
         now = time.mktime(datetime(n.year, n.month, n.day, n.hour, 0, 0, 0).timetuple())
-        results = {'points': [now, None, 1]}
+        results = {'points': [[now, None, 1], ]}
 
     points = results.get('points', [])
-    return [(timestamp, threshold) for timestamp, _, threshold in points]
+    return [(timestamp, threshold) for timestamp, _, threshold in points[:1]]
 
 
 def get_content(client, content_series, time_offset, threshold):
@@ -69,6 +69,7 @@ def write_popular_point(client, popular_series, content, threshold):
     }]
     try:
         client.write_points(body)
+        print(body)
     except Exception as e:
         logging.error('`write_trend_point` write operation failed: {}'.format(str(e)))
 
