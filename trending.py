@@ -15,8 +15,6 @@ def main(client, content_series, trending_series, offset):
     else:
         return None
 
-    print(results)
-
     columns = results['columns']
     points = results['points']
     content = [dict(zip(columns, point)) for point in points]
@@ -41,7 +39,8 @@ def main(client, content_series, trending_series, offset):
         'points': points,
     }]
     print(body)
-
+    # client.write_points(body)
+#
 
 if __name__ == '__main__':
     import sys
