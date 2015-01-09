@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
 
-import logging
 from operator import itemgetter
-
 from influxdb import InfluxDBClient
 
 
-def main(client, content_series, trending_series, offset, limit):
+def main(client, content_series, trending_series, offset):
 
     query = 'select * ' \
             'from {} ' \
@@ -26,21 +24,31 @@ def main(client, content_series, trending_series, offset, limit):
     collated = {}
     for c in content:
         collated.setdefault(c['content_id'], [])
-        collated[c['content_id']] = c
+        collated[c['content_id']].append(c)
 
-    content = {}
-    for content_id, points in collated.items():
-        points.sort(key=itemgetter('time'))
-        time = points[-1]['time']
+    columns = ['content_id', 'acceleration', 'time']
+    points = []
 
+    for content_id, results in collated.items():
+        results.sort(key=itemgetter('time'))
+        time = results[-1]['time']
+        diff = results[-1]['clicks'] - results[0]['clicks']
+        points.append([content_id, diff, time])
+
+    body = [{
+        'name': trending_series,
+        'columns': columns,
+        'points': points,
+    }]
+    print(body)
 
 
 if __name__ == '__main__':
     import sys
     # get values
-    _, host, port, username, password, db, content_series, trending_series, offset, limit = sys.argv
+    _, host, port, username, password, db, content_series, trending_series, offset = sys.argv
 
     # create client
     client = InfluxDBClient(host, port, username, password, db)
 
-    main(client, content_series, trending_series, offset, limit)
+    main(client, content_series, trending_series, offset)
