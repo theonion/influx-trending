@@ -1,10 +1,16 @@
 #!/usr/bin/env python3
 
 from operator import itemgetter
+
 from influxdb import InfluxDBClient
+
+from logger import logger
 
 
 def main(client, content_series, trending_series, offset):
+
+    logger.info('=== TRENDING.PY ===')
+    logger.info('{} {} {}'.format(content_series, trending_series, offset))
 
     query = 'select * ' \
             'from {} ' \
@@ -38,7 +44,7 @@ def main(client, content_series, trending_series, offset):
         'columns': columns,
         'points': points,
     }]
-    print(body)
+    logger.info(body)
     client.write_points(body)
 
 

@@ -5,8 +5,13 @@ import time
 
 from influxdb import InfluxDBClient
 
+from logger import logger
+
 
 def main(client, read_series, write_series, write_rounding):
+
+    logger.info('=== SUMMATION.PY ===')
+    logger.info('{} {} {}'.format(read_series, write_series, write_rounding))
 
     now = datetime.now()
     offset = int(write_rounding[:-1])
@@ -55,7 +60,7 @@ def main(client, read_series, write_series, write_rounding):
         'columns': write_columns,
         'points': write_points[:100],
     }]
-    print(body)
+    logger.info(body)
     client.write_points(body)
 
 

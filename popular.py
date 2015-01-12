@@ -2,8 +2,13 @@
 
 from influxdb import InfluxDBClient
 
+from logger import logger
+
 
 def main(client, percentile_series, content_series, popular_series, offset):
+
+    logger.info('=== POPULAR.PY ===')
+    logger.info('{} {} {} {}'.format(percentile_series, content_series, popular_series, offset))
 
     threshold_query = 'select * ' \
                       'from {} ' \
@@ -15,7 +20,7 @@ def main(client, percentile_series, content_series, popular_series, offset):
         return None
 
     for th_timestamp, _, threshold in threshold_results.get('points', []):
-        print('threshold: {}, timestamp: {}'.format(threshold, th_timestamp))
+        logger.info('threshold: {}, timestamp: {}'.format(threshold, th_timestamp))
         content_query = 'select * ' \
                         'from {} ' \
                         'where clicks >= {} ' \
@@ -35,7 +40,7 @@ def main(client, percentile_series, content_series, popular_series, offset):
                 if p[0] == th_timestamp
             ],
         }]
-        print('{}'.format(body))
+        logger.info('{}'.format(body))
         client.write_points(body)
 
 
