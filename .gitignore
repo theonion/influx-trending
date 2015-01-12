@@ -62,5 +62,4 @@ docs/_build/
 Thunbs.db
 
 # test run
-perc-1h.sh
-perc-1d.sh
+run.sh
