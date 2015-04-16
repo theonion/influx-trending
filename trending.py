@@ -14,7 +14,8 @@ def main(client, content_series, trending_series, offset):
 
     query = 'select * ' \
             'from {} ' \
-            'where time > now() - {} '.format(content_series, offset)
+            'where time > now() - {} ' \
+            'and content_id =~ /\d+/'.format(content_series, offset)
     results = client.query(query)
     if len(results):
         results = results[0]

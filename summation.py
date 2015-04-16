@@ -31,6 +31,7 @@ def main(client, read_series, write_series, write_rounding):
 
     content_query = 'select sum(clicks) as clicks ' \
                     'from {} ' \
+                    'where content_id =~ /\d+/' \
                     'group by content_id'.format(read_series)
     results = client.query(content_query)
     if len(results):

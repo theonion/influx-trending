@@ -12,7 +12,8 @@ def main(client, percentile_series, content_series, popular_series, offset):
 
     threshold_query = 'select * ' \
                       'from {} ' \
-                      'where time > now() - {}'.format(percentile_series, offset)
+                      'where time > now() - {} ' \
+                      'and content_id =~ /\d+/'.format(percentile_series, offset)
     threshold_results = client.query(threshold_query)
     if len(threshold_results):
         threshold_results = threshold_results[0]
@@ -24,7 +25,8 @@ def main(client, percentile_series, content_series, popular_series, offset):
         content_query = 'select * ' \
                         'from {} ' \
                         'where clicks >= {} ' \
-                        'and time > now() - {}'.format(content_series, threshold, offset)
+                        'and time > now() - {} ' \
+                        'and content_id =~ /\d+/'.format(content_series, threshold, offset)
         content_results = client.query(content_query)
         if len(content_results):
             content_results = content_results[0]
